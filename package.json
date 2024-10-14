@@ -1,6 +1,6 @@
 {
   "name": "imagepig",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Package to use Image Pig, the API for AI images",
   "main": "index.js",
   "scripts": {
@@ -23,5 +23,5 @@
   "bugs": {
     "url": "https://github.com/double-plus/imagepig-javascript/issues"
   },
-  "homepage": "https://imagepig.com/"
+  "homepage": "https://imagepig.com"
 }
