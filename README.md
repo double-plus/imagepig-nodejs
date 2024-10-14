@@ -1,5 +1,5 @@
 # imagepig-javascript
-A npm library for [Image Pig](https://imagepig.com/), the API for AI images.
+A [npm library](https://www.npmjs.com/package/imagepig) for [Image Pig](https://imagepig.com/), the API for AI images.
 
 ## Installation
 
