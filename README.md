@@ -22,7 +22,7 @@ void async function() {
     // save image to a file
     await result.save('cute-piglet.jpeg');
 
-    // or access image data (bytes)
+    // or access image data (Buffer)
     await result.data;
 }();
 

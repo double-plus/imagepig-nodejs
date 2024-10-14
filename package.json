@@ -1,6 +1,6 @@
 {
   "name": "imagepig",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Package to use Image Pig, the API for AI images",
   "main": "index.js",
   "scripts": {

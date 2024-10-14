@@ -1,4 +1,7 @@
 function APIResponse(content) {
+    const DOWNLOAD_ATTEMPTS = 10,
+        DOWNLOAD_INTERRUPTION = 1;
+
     return {
         get data() {
             if (content.image_data) {
@@ -7,13 +10,19 @@ function APIResponse(content) {
 
             if (content.image_url) {
                 return (async () => {
-                    response = await fetch(content.image_url, {headers: {'User-Agent': 'Mozilla/5.0'}});
+                    for (let i = 0; i < DOWNLOAD_ATTEMPTS; i++) {
+                        response = await fetch(content.image_url, {headers: {'User-Agent': 'Mozilla/5.0'}});
 
-                    if (response.ok) {
-                        return Buffer.from(await response.arrayBuffer());
+                        if (response.ok) {
+                            return Buffer.from(await response.arrayBuffer());
+                        }
+
+                        if (response.status === 404) {
+                            await new Promise(resolve => setTimeout(resolve, DOWNLOAD_INTERRUPTION * 1000));
+                        } else {
+                            throw new Error(`Unexpected response when downloading, got HTTP code ${string}`);
+                        }
                     }
-
-                    return null;
                 })();
             }
 
