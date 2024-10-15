@@ -59,7 +59,8 @@ function APIResponse(content) {
 }
 
 function ImagePig(apiKey, apiUrl='https://api.imagepig.com') {
-    const proportions = ['landscape', 'portrait', 'square', 'wide'];
+    const proportions = ['landscape', 'portrait', 'square', 'wide'],
+        upscaling_factors = [2, 4, 8];
     return {
         async apiCall(endpoint, payload) {
             response = await fetch(`${apiUrl}/${endpoint}`, {
@@ -118,6 +119,16 @@ function ImagePig(apiKey, apiUrl='https://api.imagepig.com') {
             args = this.prepareImage(source_image, 'source_image', args);
             args = this.prepareImage(target_image, 'target_image', args);
             return await this.apiCall('faceswap', args);
+        },
+        async upscale(image, upscaling_factor=2, args={}) {
+            args = this.prepareImage(image, 'image', args);
+
+            if (!upscaling_factors.includes(upscaling_factor)) {
+                throw new Error(`Unknown upscaling factor value: ${upscaling_factor}`);
+            }
+
+            args.upscaling_factor = upscaling_factor;
+            return await this.apiCall('upscale', args);
         }
     };
 }
