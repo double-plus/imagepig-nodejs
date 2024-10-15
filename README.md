@@ -27,3 +27,6 @@ void async function() {
 }();
 
 ```
+
+## Contact us
+Something does not work as expected? Feel free to [send us a message](https://imagepig.com/contact/), we are here for you.

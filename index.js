@@ -1,3 +1,5 @@
+const { Buffer } = require('node:buffer');
+
 function APIResponse(content) {
     const DOWNLOAD_ATTEMPTS = 10,
         DOWNLOAD_INTERRUPTION = 1;
@@ -46,6 +48,7 @@ function APIResponse(content) {
         },
         async save(path) {
             const fs = require('node:fs');
+
             fs.writeFile(path, await this.data, (error) => {
                 if (error) {
                     throw error;
@@ -74,13 +77,6 @@ function ImagePig(apiKey, apiUrl='https://api.imagepig.com') {
 
             return APIResponse(await response.json());
         },
-        checkURL(string) {
-            const url = new URL(string);
-
-            if (!['http', 'https'].includes(url.protocol) || !url.hostname) {
-                throw new Error(`Invalid URL: ${string}`);
-            }
-        },
         async default(prompt, negative_prompt='', args={}) {
             args.positive_prompt = prompt;
             args.negative_prompt = negative_prompt;
@@ -101,11 +97,26 @@ function ImagePig(apiKey, apiUrl='https://api.imagepig.com') {
             args.proportion = proportion;
             return await this.apiCall('flux', args);
         },
-        async faceswap(source_image_url, target_image_url, args={}) {
-            this.checkURL(source_image_url);
-            this.checkURL(target_image_url);
-            args.source_image_url = source_image_url;
-            args.target_image_url = target_image_url;
+        prepareImage(image, paramName, params) {
+            if (typeof image === 'string') {
+                const url = new URL(image);
+
+                if (!['http:', 'https:'].includes(url.protocol) || !url.hostname) {
+                    throw new Error(`Invalid URL: ${image}`);
+                }
+
+                params[paramName + '_url'] = image;
+            } else if (Buffer.isBuffer(image)) {
+                params[paramName + '_data'] = image.toString('base64');
+            } else {
+                throw new Error(`Please provide string or Buffer for ${paramName}.`);
+            }
+
+            return params;
+        },
+        async faceswap(source_image, target_image, args={}) {
+            args = this.prepareImage(source_image, 'source_image', args);
+            args = this.prepareImage(target_image, 'target_image', args);
             return await this.apiCall('faceswap', args);
         }
     };
