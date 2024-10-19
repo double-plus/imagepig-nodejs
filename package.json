@@ -1,6 +1,6 @@
 {
   "name": "imagepig",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Package to use Image Pig, the API for AI images",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/double-plus/imagepig-javascript.git"
+    "url": "git+https://github.com/double-plus/imagepig-nodejs.git"
   },
   "keywords": [
     "API",
@@ -21,7 +21,7 @@
   "author": "Pavel Mises <pavel@double.plus>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/double-plus/imagepig-javascript/issues"
+    "url": "https://github.com/double-plus/imagepig-nodejs/issues"
   },
   "homepage": "https://imagepig.com"
 }
