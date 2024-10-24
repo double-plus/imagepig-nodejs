@@ -129,6 +129,17 @@ function ImagePig(apiKey, apiUrl='https://api.imagepig.com') {
 
             args.upscaling_factor = upscaling_factor;
             return await this.apiCall('upscale', args);
+        },
+        async cutout(image, args={}) {
+            args = this.prepareImage(image, 'image', args);
+            return await this.apiCall('cutout', args);
+        },
+        async replace(image, select_prompt, positive_prompt, negative_prompt='', args={}) {
+            args = this.prepareImage(image, 'image', args);
+            args.select_prompt = select_prompt;
+            args.positive_prompt = positive_prompt;
+            args.negative_prompt = negative_prompt;
+            return await this.apiCall('replace', args);
         }
     };
 }
