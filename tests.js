@@ -11,7 +11,7 @@ void async function() {
 
     const imagepig = ImagePig(process.env.IMAGEPIG_API_KEY),
         jane = 'https://imagepig.com/static/jane.jpeg',
-        monaLisa = 'https://imagepig.com/static/mona_lisa.jpeg';
+        monaLisa = 'https://imagepig.com/static/mona-lisa.jpeg';
 
     let result;
 
@@ -35,4 +35,7 @@ void async function() {
 
     result = await imagepig.replace(jane, 'woman', 'robot')
     await result.save(path + '/replace.jpeg');
+
+    result = await imagepig.outpaint(jane, 'dress', 0, 0, 500)
+    await result.save(path + '/outpaint.jpeg');
 }();

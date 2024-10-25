@@ -143,6 +143,16 @@ function ImagePig(apiKey, raiseException = true, apiUrl='https://api.imagepig.co
             args.positive_prompt = positive_prompt;
             args.negative_prompt = negative_prompt;
             return await this.apiCall('replace', args);
+        },
+        async outpaint(image, positive_prompt, top=0, right=0, bottom=0, left=0, negative_prompt='', args={}) {
+            args = this.prepareImage(image, 'image', args);
+            args.positive_prompt = positive_prompt;
+            args.negative_prompt = negative_prompt;
+            args.top = top;
+            args.right = right;
+            args.bottom = bottom;
+            args.left = left;
+            return await this.apiCall('outpaint', args);
         }
     };
 }
