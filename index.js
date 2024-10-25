@@ -5,6 +5,9 @@ function APIResponse(content) {
         DOWNLOAD_INTERRUPTION = 1;
 
     return {
+        get content() {
+            return content;
+        },
         get data() {
             if (content.image_data) {
                 return Promise.resolve(Buffer.from(content.image_data, 'base64'));
@@ -58,7 +61,7 @@ function APIResponse(content) {
     };
 }
 
-function ImagePig(apiKey, apiUrl='https://api.imagepig.com') {
+function ImagePig(apiKey, raiseException = true, apiUrl='https://api.imagepig.com') {
     const proportions = ['landscape', 'portrait', 'square', 'wide'],
         upscaling_factors = [2, 4, 8];
     return {
@@ -72,7 +75,7 @@ function ImagePig(apiKey, apiUrl='https://api.imagepig.com') {
                 body: JSON.stringify(payload)
             });
 
-            if (!response.ok) {
+            if (!response.ok && raiseException) {
                 throw new Error(`Response status: ${response.status}`);
             }
 
