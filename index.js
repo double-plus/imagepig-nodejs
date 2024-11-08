@@ -1,5 +1,12 @@
 const { Buffer } = require('node:buffer');
 
+class ImagePigError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = this.constructor.name;
+    }
+}
+
 function APIResponse(content) {
     const DOWNLOAD_ATTEMPTS = 10,
         DOWNLOAD_INTERRUPTION = 1;
@@ -25,7 +32,7 @@ function APIResponse(content) {
                         if (response.status === 404) {
                             await new Promise(resolve => setTimeout(resolve, DOWNLOAD_INTERRUPTION * 1000));
                         } else {
-                            throw new Error(`Unexpected response when downloading, got HTTP code ${string}`);
+                            throw new ImagePigError(`Unexpected response when downloading, got HTTP code ${string}.`);
                         }
                     }
                 })();
@@ -64,6 +71,7 @@ function APIResponse(content) {
 function ImagePig(apiKey, raiseException = true, apiUrl='https://api.imagepig.com') {
     const proportions = ['landscape', 'portrait', 'square', 'wide'],
         upscaling_factors = [2, 4, 8];
+
     return {
         async apiCall(endpoint, payload) {
             response = await fetch(`${apiUrl}/${endpoint}`, {
@@ -76,7 +84,7 @@ function ImagePig(apiKey, raiseException = true, apiUrl='https://api.imagepig.co
             });
 
             if (!response.ok && raiseException) {
-                throw new Error(`Response status: ${response.status}`);
+                throw new ImagePigError(`Response status: ${response.status}`);
             }
 
             return APIResponse(await response.json());
@@ -95,7 +103,7 @@ function ImagePig(apiKey, raiseException = true, apiUrl='https://api.imagepig.co
             args.positive_prompt = prompt;
 
             if (!proportions.includes(proportion)) {
-                throw new Error(`Unknown proportion value: ${proportion}`);
+                throw new ImagePigError(`Unknown proportion value: ${proportion}.`);
             }
 
             args.proportion = proportion;
@@ -106,14 +114,14 @@ function ImagePig(apiKey, raiseException = true, apiUrl='https://api.imagepig.co
                 const url = new URL(image);
 
                 if (!['http:', 'https:'].includes(url.protocol) || !url.hostname) {
-                    throw new Error(`Invalid URL: ${image}`);
+                    throw new ImagePigError(`Invalid URL: ${image}`);
                 }
 
                 params[paramName + '_url'] = image;
             } else if (Buffer.isBuffer(image)) {
                 params[paramName + '_data'] = image.toString('base64');
             } else {
-                throw new Error(`Please provide string or Buffer for ${paramName}.`);
+                throw new ImagePigError(`Please provide string or Buffer for ${paramName}.`);
             }
 
             return params;
@@ -127,7 +135,7 @@ function ImagePig(apiKey, raiseException = true, apiUrl='https://api.imagepig.co
             args = this.prepareImage(image, 'image', args);
 
             if (!upscaling_factors.includes(upscaling_factor)) {
-                throw new Error(`Unknown upscaling factor value: ${upscaling_factor}`);
+                throw new ImagePigError(`Unknown upscaling factor value: ${upscaling_factor}.`);
             }
 
             args.upscaling_factor = upscaling_factor;
