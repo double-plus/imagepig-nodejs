@@ -87,7 +87,12 @@ function ImagePig(apiKey, raiseException = true, apiUrl='https://api.imagepig.co
                 throw new ImagePigError(`Response status: ${response.status}`);
             }
 
-            return APIResponse(await response.json());
+            return APIResponse(
+                JSON.parse(
+                    await response.text(),
+                    (key, value, context) => context && key === 'seed' ? BigInt(context.source) : value
+                )
+            );
         },
         async default(prompt, negative_prompt='', args={}) {
             args.positive_prompt = prompt;
